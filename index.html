@@ -5,100 +5,149 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Dabarkads Fam Spin Wheel</title>
 
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
+  body { 
+    margin: 0; 
+    font-family: 'Poppins', sans-serif; 
+    background: radial-gradient(circle, #ffffff 0%, #e8e8e8 100%); 
+    text-align: center; 
+    padding-bottom: 50px; 
+    color: #333;
+  }
+
+  /* Cool Framed Title Boarder */
+  .title-container {
+    margin: 30px auto;
+    display: inline-block;
+    padding: 10px 40px;
+    border: 4px solid #f36b2c;
+    border-radius: 50px 15px 50px 15px;
+    background-color: white;
+    box-shadow: 0 6px 0 #d35400;
+  }
+
+  h2 { 
+    margin: 0; 
+    font-family: 'Luckiest Guy', cursive; 
+    font-size: 32px; 
+    letter-spacing: 2px;
+    color: #f36b2c;
+    text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1);
+  }
+
+  input { 
+    width: 80%; 
+    max-width: 300px; 
+    padding: 15px; 
+    font-size: 16px; 
+    margin: 10px 0; 
+    border: 2px solid #ddd; 
+    border-radius: 25px; 
+    outline: none; 
     text-align: center;
-    padding-bottom: 50px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
   }
 
-  h2 { margin-top: 15px; }
+  input:focus { border-color: #f36b2c; border-width: 2px; }
 
-  input {
-    width: 90%;
-    max-width: 300px;
-    padding: 12px;
-    font-size: 16px;
-    margin: 10px 0;
+  button { 
+    padding: 15px 50px; 
+    font-size: 20px; 
+    font-family: 'Luckiest Guy', cursive;
+    background: linear-gradient(to bottom, #f36b2c, #d35400);
+    color: white; 
+    border: none; 
+    border-radius: 50px; 
+    cursor: pointer; 
+    box-shadow: 0 5px 0 #a04000;
+    margin-bottom: 20px;
+    animation: glow 2s infinite;
   }
 
-  button {
-    padding: 14px 30px;
-    font-size: 18px;
-    background: #f36b2c;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+  button:active { transform: translateY(3px); box-shadow: 0 2px 0 #a04000; }
+  button:disabled { background: #ccc; box-shadow: 0 5px 0 #999; animation: none; }
+
+  @keyframes glow {
+    0% { box-shadow: 0 5px 0 #a04000, 0 0 5px rgba(243, 107, 44, 0.2); }
+    50% { box-shadow: 0 5px 0 #a04000, 0 0 20px rgba(243, 107, 44, 0.6); }
+    100% { box-shadow: 0 5px 0 #a04000, 0 0 5px rgba(243, 107, 44, 0.2); }
   }
 
-  button:disabled { background: gray; cursor: not-allowed; }
-
-  /* Container to stack pointer over wheel */
-  .wheel-container {
-    position: relative;
-    width: 360px;
-    height: 360px;
-    margin: 20px auto;
-  }
-
-  canvas {
-    width: 100%;
-    height: 100%;
+  /* Larger Wheel Container for better visibility */
+  .wheel-container { 
+    position: relative; 
+    width: 380px; 
+    height: 380px; 
+    margin: 20px auto; 
+    border: 12px solid #333; 
     border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    background: #333;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
   }
 
-  /* Pointer triangle pointing DOWN */
-  .pointer {
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-top: 40px solid #333;
-    z-index: 10;
+  canvas { width: 100%; height: 100%; border-radius: 50%; background: white; }
+
+  .pointer { 
+    position: absolute; 
+    top: -28px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 0; 
+    height: 0; 
+    border-left: 20px solid transparent; 
+    border-right: 20px solid transparent; 
+    border-top: 45px solid #ff0000; 
+    z-index: 10; 
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
   }
 
-  .results {
-    margin-top: 20px;
-    background: white;
-    padding: 10px;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 8px;
+  .results { 
+    margin-top: 40px; 
+    background: white; 
+    padding: 25px; 
+    max-width: 480px; 
+    margin: auto; 
+    border-radius: 20px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
   }
 
-  .admin {
-    font-size: 12px;
-    color: #ccc; /* Made it very light gray so it is less noticeable */
-    margin-top: 30px;
-    cursor: pointer;
+  .result-item { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 12px 5px; 
+    border-bottom: 1px solid #eee; 
   }
+
+  .result-name { font-weight: 700; color: #333; font-size: 15px; }
+  .result-item-won { color: #f36b2c; font-weight: 700; }
+  .result-time { color: #aaa; font-size: 11px; white-space: nowrap; }
+
+  .admin { font-size: 11px; color: #ddd; margin-top: 60px; cursor: pointer; }
 </style>
 </head>
 <body>
 
-<h2>Dabarkads Fam</h2>
+<div class="title-container">
+  <h2>DABARKADS FAMILY</h2>
+</div>
 
-<input id="nameInput" placeholder="Enter Family name" autocomplete="off" />
+<br>
+<input id="nameInput" placeholder="Enter Family Name" autocomplete="off" />
 <br />
-<button id="spinBtn">SPIN</button>
+<button id="spinBtn">SPIN THE WHEEL</button>
 
 <div class="wheel-container">
   <div class="pointer"></div>
-  <canvas id="wheel" width="360" height="360"></canvas>
+  <canvas id="wheel" width="500" height="500"></canvas>
 </div>
 
 <div class="results">
-  <h3>Results</h3>
-  <ul id="resultsList" style="text-align: left;"></ul>
+  <h3 style="font-family: 'Luckiest Guy'; font-size: 24px;">🎉 Family List</h3>
+  <ul id="resultsList"></ul>
 </div>
 
 <div class="admin" onclick="adminReset()">Admin Reset</div>
@@ -108,7 +157,6 @@
   import { getFirestore, doc, setDoc, getDoc, getDocs, collection, deleteDoc } 
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // ✅ I ADDED YOUR CONFIG HERE FOR YOU
   const firebaseConfig = {
     apiKey: "AIzaSyC3-qUugEiiNbmK---LrQtCQsykO0rENwc",
     authDomain: "dabarkads-family-spin-wheel.firebaseapp.com",
@@ -126,78 +174,68 @@
   const spinBtn = document.getElementById("spinBtn");
   const nameInput = document.getElementById("nameInput");
 
-  // Wheel items
-  let items = [
-    "Beef","Beef1",
-    "Chicken","Chicken1",
-    "Pork","Pork1",
-    "Fish","Fish1",
-    "Drinks","Drink1",
-    "Dessert","Dessert1",
-    "Utensils"
-  ];
-
+  let items = ["Beef","Beef1","Chicken","Chicken1","Pork","Pork1","Fish","Fish1","Drinks","Drink1","Dessert","Dessert1","Utensils"];
   let currentAngle = 0;
   let spinning = false;
 
   function drawWheel(rotationAngle = 0) {
     const r = canvas.width / 2;
     const slice = (2 * Math.PI) / items.length;
-    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    if (items.length === 0) {
+        ctx.save();
+        ctx.translate(r, r);
+        ctx.font = "bold 24px Poppins";
+        ctx.textAlign = "center";
+        ctx.fillText("All Prizes Won!", 0, 0);
+        ctx.restore();
+        return;
+    }
+
     ctx.save();
     ctx.translate(r, r);
     ctx.rotate(rotationAngle * Math.PI / 180); 
-
     items.forEach((item, i) => {
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.fillStyle = `hsl(${i * 360 / items.length}, 70%, 60%)`;
+        ctx.fillStyle = `hsl(${i * 360 / items.length}, 75%, 55%)`;
         ctx.arc(0, 0, r, i * slice, (i + 1) * slice);
         ctx.lineTo(0, 0);
         ctx.fill();
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 2;
         ctx.stroke();
-
+        
         ctx.save();
         ctx.rotate(i * slice + slice / 2);
         ctx.textAlign = "right";
         ctx.fillStyle = "#fff";
-        ctx.font = "bold 14px Arial";
-        ctx.fillText(item, r - 20, 5);
+        // ✅ BIGGER FONT FOR WHEEL
+        ctx.font = "bold 20px Poppins"; 
+        ctx.fillText(item, r - 30, 8);
         ctx.restore();
     });
-
     ctx.restore();
   }
 
   async function spin() {
-    let name = nameInput.value.trim();
-    if (!name || spinning) return alert("Enter a family name");
+    let rawName = nameInput.value.trim();
+    if (!rawName || spinning) return alert("Please enter a name!");
+    if (items.length === 0) return alert("No more items left!");
 
-    // ✅ This line makes the first letter Uppercase and the rest lowercase
-    name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    let capitalized = rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
+    let fullName = capitalized.includes("Family") ? capitalized : capitalized + " Family";
 
-    const ref = doc(db, "spins", name);
-    try {
-      if ((await getDoc(ref)).exists()) {
-        return alert(`${name} already spun.`);
-      }
-    } catch (e) {
-      console.error(e);
-      return alert("Database error. Check console.");
-    }
-    
-    // ... rest of the spin function remains the same
+    const ref = doc(db, "spins", fullName);
+    const docSnap = await getDoc(ref);
+    if (docSnap.exists()) return alert(fullName + " has already spun!");
 
     spinning = true;
     spinBtn.disabled = true;
 
-    const spinDuration = 4000;
-    const extraSpins = 360 * 5; 
-    const randomStop = Math.random() * 360;
-    const totalRotation = extraSpins + randomStop;
-    
+    const spinDuration = 5000;
+    const totalRotation = (360 * 12) + (Math.random() * 360);
     const start = performance.now();
     const startAngle = currentAngle;
 
@@ -205,89 +243,79 @@
       const elapsed = time - start;
       const p = Math.min(elapsed / spinDuration, 1);
       const ease = 1 - Math.pow(1 - p, 4);
-      
       currentAngle = startAngle + (totalRotation * ease);
       drawWheel(currentAngle);
-
-      if (p < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        finishSpin(name);
-      }
+      if (p < 1) requestAnimationFrame(animate);
+      else finishSpin(fullName);
     }
-    
     requestAnimationFrame(animate);
   }
 
-  async function finishSpin(name) {
+  async function finishSpin(fullName) {
     const actualAngle = currentAngle % 360;
     const sliceDeg = 360 / items.length;
     let index = Math.floor((360 - actualAngle + 270) % 360 / sliceDeg);
     index = (items.length + index) % items.length;
+    const wonItem = items[index];
 
-    const item = items[index];
-
-    await setDoc(doc(db, "spins", name), { 
-      name: name,
-      item: item,
-      timestamp: new Date()
-    });
-
-    // Remove item from wheel
-    items.splice(index, 1);
-
+    await setDoc(doc(db, "spins", fullName), { name: fullName, item: wonItem, time: Date.now() });
+    
+    confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
     spinning = false;
     spinBtn.disabled = false;
     nameInput.value = ""; 
     
+    resetItemsList(); 
     loadResults();
-    drawWheel(currentAngle);
-    alert(`Congratulations ${name}! You got: ${item}`);
+    alert("🎉 " + fullName + " won: " + wonItem);
   }
 
-  async function loadResults(){
+  function resetItemsList() {
+      items = ["Beef","Beef1","Chicken","Chicken1","Pork","Pork1","Fish","Fish1","Drinks","Drink1","Dessert","Dessert1","Utensils"];
+  }
+
+  async function loadResults() {
     const list = document.getElementById("resultsList");
     try {
       const snap = await getDocs(collection(db, "spins"));
-      list.innerHTML = "";
-      if(snap.empty) {
-        list.innerHTML = "<li>No results yet.</li>";
-        return;
-      }
+      let allSpins = [];
+      resetItemsList();
       snap.forEach(d => {
+          let data = d.data();
+          allSpins.push({ id: d.id, ...data });
+          const itemIdx = items.indexOf(data.item);
+          if (itemIdx > -1) items.splice(itemIdx, 1);
+      });
+      drawWheel(currentAngle);
+      allSpins.sort((a, b) => (b.time || 0) - (a.time || 0));
+      list.innerHTML = "";
+      allSpins.forEach(data => {
+        let timeStr = data.time ? new Date(data.time).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : "---";
         const li = document.createElement("li");
-        li.textContent = `${d.id} – ${d.data().item}`;
+        li.className = "result-item";
+        li.innerHTML = `
+          <div>
+            <span class="result-name">${data.id}</span> 
+            <span style="color:#888; font-size:12px; margin:0 4px;">won</span> 
+            <span class="result-item-won">${data.item}</span>
+          </div>
+          <div class="result-time">${timeStr}</div>`;
         list.appendChild(li);
       });
-    } catch (e) {
-      list.innerHTML = "Error loading results.";
-    }
+    } catch (e) { console.error(e); }
   }
 
-  // 🔒 PASSWORD PROTECTED RESET
-  async function adminReset() {
-    // 1. Ask for password
-    const password = prompt("Enter Admin Password to reset:");
-    
-    // 2. Check password (I set it to 4321)
-    if (password !== "4321") {
-        return alert("Wrong password! Permission denied.");
-    }
-
-    if(!confirm("Are you sure you want to delete all data?")) return;
+  window.adminReset = async () => {
+    const pw = prompt("Admin Password:");
+    if (pw !== "1234") return alert("Wrong password");
+    if (!confirm("Delete all data and reset the wheel?")) return;
     const snap = await getDocs(collection(db, "spins"));
-    for(const d of snap.docs){
-      await deleteDoc(d.ref);
-    }
+    for(const d of snap.docs) await deleteDoc(d.ref);
     location.reload();
-  }
+  };
 
-  window.adminReset = adminReset;
   spinBtn.onclick = spin;
-
-  drawWheel(currentAngle);
   loadResults();
 </script>
-
 </body>
 </html>
